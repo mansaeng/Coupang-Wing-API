@@ -15,10 +15,10 @@ path = "/v2/providers/seller_api/apis/api/v1/marketplace/seller-products"
 
 message = datetime+method+path
 
-#replace with your own accesskey
-accesskey = "****"
-#replace with your own secretKey
-secretkey = "****"
+keys = open('key.txt').read().splitlines()
+
+accesskey = keys[0]
+secretkey = keys[1]
 
 #********************************************************#
 #authorize, demonstrate how to generate hmac signature here
@@ -334,8 +334,7 @@ strjson={
 
 data = json.dumps(strjson).encode("utf-8")
 
-print('
-BEGIN REQUEST++++++++++++++++++++++++++++++++++++')
+print('BEGIN REQUEST++++++++++++++++++++++++++++++++++++')
 req = urllib.request.Request(url)
 
 req.add_header("Content-type","application/json;charset=UTF-8")
@@ -347,18 +346,17 @@ ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-print('
-RESPONSE++++++++++++++++++++++++++++++++++++')
+print('RESPONSE++++++++++++++++++++++++++++++++++++')
 try:
   resp = urllib.request.urlopen(req, data, context=ctx)
 except urllib.request.HTTPError as e:
     print(e.code)
     print(e.reason)
-    print(e.fp.read())
+    print(e.fp.read().decode())
 except urllib.request.URLError as e:
     print(e.errno)
     print(e.reason)
-    print(e.fp.read())
+    print(e.fp.read().decode())
 else:
     # 200
     body = resp.read().decode(resp.headers.get_content_charset())
